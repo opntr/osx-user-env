@@ -15,6 +15,10 @@ alias ll='ls -Al'
 alias pkg='brew'
 alias gcp='git cherry-pick'
 alias gcpx='git cherry-pick -x'
+if which -s nvim
+then
+	alias vi='nvim'
+fi
 
 PATH=${PATH}:${HOME}/bin
 export PATH
