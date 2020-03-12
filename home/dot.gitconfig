@@ -1,0 +1,11 @@
+[push]
+	default = simple
+[commit]
+	template = ~/.git/commit-template
+[user]
+	name = Oliver Pinter
+	email = oliver.pntr@gmail.com
+[alias]
+	log-with-tree = log --decorate --all --graph
+	logd = log --decorate
+	tree = log --oneline --decorate --all --graph
