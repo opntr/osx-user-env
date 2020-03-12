@@ -12,7 +12,7 @@ install:
 	install -m 0440 dot.gitconfig		$(HOME)/.gitconfig
 	install -m 0440 dot.git/commit-template	$(HOME)/.git/commit-template
 	install -m 0440 dot.git/opbsd-template	$(HOME)/.git/opbsd-template
-	make -C nvim/Makefile install
+	make -C nvim install
 
 contribinstall:
 	install -m 0550 contrib/dot.git-completion.bash		$(HOME)/.git-completion.bash
