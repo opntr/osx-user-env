@@ -43,7 +43,8 @@ call plug#end()
 
 " Deoplete settings
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-inoremap <expr><tab> pumvisible() ? "<c-n>" : "\<tab>"
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <expr><S-tab> pumvisible() ? "\<c-p>" : "\<tab>"
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#clang#libclang_path = system("mdfind -name libclang.dylib | grep CommandLineTools | tr -d '\n'")
 let g:deoplete#sources#clang#clang_header = system("xcrun --show-sdk-path | tr -d '\n'") . "/usr/include"
