@@ -23,3 +23,4 @@ fi
 PATH=${PATH}:${HOME}/bin
 export PATH
 
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
