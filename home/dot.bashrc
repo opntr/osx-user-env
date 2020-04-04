@@ -9,6 +9,7 @@ export PS1="\u@\h:\w\\$ \[$(tput sgr0)\]"
 
 export HISTFILESIZE=1000000
 export HISTSIZE=1000000
+export HISTCONTROL=ignoreboth
 
 alias ls='ls -A'
 alias ll='ls -Al'
