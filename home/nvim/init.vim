@@ -10,7 +10,7 @@ set cindent
 set hlsearch
 set backspace+=start,eol,indent
 let c_space_errors=1
-
+set guicursor=
 
 highlight	WhitespaceEOL ctermbg=red guibg=red
 match		WhitespaceEOL /\s\+$/
