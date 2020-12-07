@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+get_git_project_for_git()
+{
+	local project=$(git rev-parse --show-toplevel | awk 'BEGIN{FS="/"} {print $(NF-1)"/"$(NF)".git"}')
+
+	echo ${project:-UNKNOWN}
+}
+
+get_git_remote_for_upstream()
+{
+	local project=$(get_git_project_for_git)
+
+	if [ ${project} = "UNKNOWN" ]
+	then
+		echo "Unable to detect project for the repo: ${project}"
+		exit 1
+	fi
+	local remote=$(git remote -v | eval "awk '/${project/\//\\\/}/{print \$1}'" | uniq)
+
+	echo ${remote:-UNKNOWN}
+}
+
+git_upstream=$(get_git_remote_for_upstream)
+
+git fetch ${git_upstream}
+git rebase -i --autostash $* ${git_upstream}/master

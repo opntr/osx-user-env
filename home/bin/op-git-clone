@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -e
+
+REPO="${1}"
+GIT_BASE="${HOME}/data/git"
+
+if ! echo "${REPO}" | grep -q '@'
+then
+	echo "Failed: expected URL is 'ssh+git' and not '${REPO}'"
+	exit 1
+fi
+
+# git@github.com:joeyoravec/j2534-logger.git
+namespace=$(echo ${REPO} | sed -n -e '/git@github.com/s#.*:\(.*\)/.*#\1#gp')
+dest=$(echo ${REPO} | sed -n -e '/git@github.com/s#.*:\(.*\)/\(.*\).git#\2#gp')
+
+if [ ! -d ${GIT_BASE}/${namespace} ]
+then
+	echo "create git namespace \"${namespace}\" for ${REPO}"
+	mkdir -p ${GIT_BASE}/${namespace}
+fi
+
+cd ${GIT_BASE}/${namespace}
+
+git clone ${REPO}
+
+echo "${GIT_BASE}/${namespace}/${dest}"

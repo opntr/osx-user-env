@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+_PATTERN="$*"
+_PATH="$(dirname ${_PATTERN})"
+_FILE="$(basename ${_PATTERN})"
+
+if [ "${_PATH}" != "." ]
+then
+	_PATH="${_PATH}/"
+fi
+
+find "${_PATH}" -name "${_FILE}" -exec vim {} +

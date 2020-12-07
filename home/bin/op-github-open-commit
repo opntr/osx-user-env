@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+commit=${1:-HEAD}
+
+# always run a query to the ref, this ensures that we got git commit id
+commit=$(git rev-parse ${commit})
+repo=$(git remote -v | sed -n -e '/origin/s/.*:\(.*\).git .*/\1/gp' | head -1)
+
+open "https://github.ibm.com/${repo}/commit/${commit}"
