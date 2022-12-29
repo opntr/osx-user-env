@@ -2,7 +2,11 @@ syntax		on
 filetype	on
 filetype	plugin on
 filetype	indent on
-colorscheme	zellner
+colorscheme	koehler
+
+if &diff
+	syntax off
+endif
 
 set showcmd
 set wildmenu
@@ -11,6 +15,7 @@ set hlsearch
 set backspace+=start,eol,indent
 let c_space_errors=1
 set guicursor=
+
 
 highlight	WhitespaceEOL ctermbg=red guibg=red
 match		WhitespaceEOL /\s\+$/
@@ -32,13 +37,14 @@ map <F12> :execute "lnext"<CR>
 let g:python3_host_prog = '/usr/local/bin/python3'
 
 call plug#begin('~/.config/nvim/plugged')
+Plug 'neovim/nvim-lspconfig'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"Plug 'Shougo/echodoc' " DO NOT ENABLE THIS - conflicts with CompleteParameter
 Plug 'Shougo/neoinclude.vim'
 Plug 'deoplete-plugins/deoplete-clang'
 Plug 'luochen1990/rainbow'
 Plug 'tenfyzhong/CompleteParameter.vim'
 Plug 'jiangmiao/auto-pairs'
+Plug 'deoplete-plugins/deoplete-jedi'
 call plug#end()
 
 " Deoplete settings
@@ -49,6 +55,7 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#clang#libclang_path = system("mdfind -name libclang.dylib | grep CommandLineTools | tr -d '\n'")
 let g:deoplete#sources#clang#clang_header = system("xcrun --show-sdk-path | tr -d '\n'") . "/usr/include"
 let g:deoplete#sources#clang#flags = ["-cc1", "-triple", "x86_64-apple-darwin19.3.0", "-isysroot", system("xcrun --show-sdk-path | tr -d '\n'"), "-fmax-type-align=16"]
+let g:deoplete#sources#clang#include_default_arguments = 1
 
 " Echodoc settings
 let g:echodoc#enable_at_startup = 0
