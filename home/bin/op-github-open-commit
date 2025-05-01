@@ -6,4 +6,4 @@ commit=${1:-HEAD}
 commit=$(git rev-parse ${commit})
 repo=$(git remote -v | sed -n -e '/origin/s/.*:\(.*\).git .*/\1/gp' | head -1)
 
-open "https://github.ibm.com/${repo}/commit/${commit}"
+open "https://github.com/${repo}/commit/${commit}"

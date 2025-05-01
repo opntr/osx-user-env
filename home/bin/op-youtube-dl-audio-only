@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+WDIR=${HOME}/data/multimedia/sounds/youtube
+
+mkdir -p ${WDIR}
+
+pushd ${WDIR}
+
+echo "$@" >> urls
+
+#youtube-dl --restrict-filenames -x --audio-format=mp3 --audio-quality=3 "$@"
+yt-dlp --restrict-filenames --windows-filenames -x --audio-format=mp3 --audio-quality=3 "$@"
+
+mkdir -p flac
+pushd flac
+#youtube-dl --restrict-filenames -x --audio-format=flac "$@"
+yt-dlp --restrict-filenames -x --audio-format=flac "$@"
+popd
+
+popd

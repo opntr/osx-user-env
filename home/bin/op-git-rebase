@@ -18,7 +18,7 @@ get_git_remote_for_upstream()
 	fi
 	local remote=$(git remote -v | eval "awk '/${project/\//\\\/}/{print \$1}'" | uniq)
 
-	echo ${remote:-UNKNOWN}
+	echo ${remote:-UNKNOWN_REMOTE}
 }
 
 git_upstream=$(get_git_remote_for_upstream)

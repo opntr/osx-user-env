@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+sudo plutil -replace Disabled -bool true /Library/LaunchAgents/com.microsoft.update.agent.plist
+sudo plutil -replace RunAtLoad -bool false /Library/LaunchAgents/com.microsoft.update.agent.plist
+
