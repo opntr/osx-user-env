@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+function get_symbols()
+{
+	local _file=${1##*/}
+
+	objdump -t ${_file}
+}
+
+function extract_archive()
+{
+	local _file=$1
+	local _dest=$2
+
+	pushd ${_dest}
+	ar -x ${_file}
+	popd
+}
+
+function diff_symbols()
+{
+	local _dest_a=$1
+	local _dest_b=$2
+
+	pushd ${_dest_a}
+	for i in ${_dest_a}/*.o
+	do
+		get_symbols $i > ${_dest_a}/${i##*/}.symbols_unordered
+	done
+	popd
+
+	pushd ${_dest_b}
+	for i in ${_dest_b}/*.o
+	do
+		get_symbols $i > ${_dest_b}/${i##*/}.symbols_unordered
+	done
+	popd
+
+	for i in $(ls ${_dest_a}/*.o ${_dest_b}/*.o | sort | uniq)
+	do
+		local _a=${_dest_a}/${i##*/}.symbols_unordered
+		local _b=${_dest_b}/${i##*/}.symbols_unordered
+
+		if [ ! -f $_a ]
+		then
+			_a="/dev/null"
+		fi
+
+		if [ ! -f $_b ]
+		then
+			_b="/dev/null"
+		fi
+
+		if ! cmp -s ${_a} ${_b}
+		then
+			diff -u -U0 ${_a} ${_b}
+
+		fi
+	done
+}
+
+file_a=$1
+file_b=$2
+
+if [[ -z ${file_a} || -z ${file_b} ]]
+then
+	echo "fuck"
+	exit 1
+fi
+
+tmp_a=$(mktemp -d -t $(basename ${file_a}))
+tmp_b=$(mktemp -d -t $(basename ${file_b}))
+
+extract_archive ${file_a} ${tmp_a}
+extract_archive ${file_b} ${tmp_b}
+
+diff_symbols ${tmp_a} ${tmp_b}
+
+rm -r ${tmp_a}
+rm -r ${tmp_b}

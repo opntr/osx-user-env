@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ -z "$1" ]
+then
+	echo "wtf?! missing argument"
+	exit 1
+fi
+
+if [ -d $1 ]
+then
+	xattr -dr com.apple.quarantine $1
+else
+	xattr -d com.apple.quarantine $1
+fi

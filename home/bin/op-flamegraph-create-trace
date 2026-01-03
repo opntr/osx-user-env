@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [ -z "${1}" ]
+then
+	echo "fuck"
+	exit 1
+fi
+
+TIMESTAMP=$(date "+%Y%m%d%H%M%S")
+PROCESS=${1}
+PROCESS_NAME=${1##*/}
+shift
+
+xctrace record --template 'Time Profiler' --output /tmp/${PROCESS_NAME}-${TIMESTAMP}.trace --target-stdout - --launch "${PROCESS}" -- $*
+
+echo "/tmp/${PROCESS_NAME}-${TIMESTAMP}.trace"

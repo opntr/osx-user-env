@@ -2,4 +2,4 @@
 
 sudo plutil -replace Disabled -bool true /Library/LaunchAgents/com.microsoft.update.agent.plist
 sudo plutil -replace RunAtLoad -bool false /Library/LaunchAgents/com.microsoft.update.agent.plist
-
+sudo rm -rv /Library/Application\ Support/Microsoft/MAU2.0

@@ -1,11 +1,15 @@
-[push]
-	default = simple
-[commit]
-	template = ~/.git/commit-template
+[submodule]
+	recurse = true
 [user]
 	name = Oliver Pinter
 	email = oliver.pntr@gmail.com
+[push]
+        default = simple
+[commit]
+        template = ~/.git/commit-template
 [alias]
-	log-with-tree = log --decorate --all --graph
-	logd = log --decorate
-	tree = log --oneline --decorate --all --graph
+        log-with-tree = log --decorate --all --graph
+        logd = log --decorate
+        tree = log --oneline --decorate --all --graph
+[init]
+        defaultBranch = master

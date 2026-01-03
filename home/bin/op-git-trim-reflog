@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+git reflog expire --expire=45.days.ago --expire-unreachable=now --all
+git gc --aggressive

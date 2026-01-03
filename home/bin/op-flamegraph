@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# generate the Instruments's input with the following command:
+#
+# xctrace record --template 'Time Profiler' --output /tmp/${PROCESS_NAME}.trace --attach ${PROCESS_NAME}
+#
+
+if [ -z "${1}" ]
+then
+	echo "fuck"
+	exit 1
+fi
+
+echo "Instruments -> Time Profiler -> Select Process -> menu Edit -> Deep Copy -> paste here -> write EOF -> [Ctrl+d]"
+sleep 3
+
+open -a "Instruments" $1
+
+out_txt=$(mktemp)
+cat | sed '/^$/d' >${out_txt}
+
+trace_folded=$(mktemp)
+${HOME}/work/git/github.com/brendangregg/FlameGraph/stackcollapse-instruments.pl ${out_txt} > ${trace_folded}
+
+svg="$(mktemp --dry-run).svg"
+${HOME}/work/git/github.com/brendangregg/FlameGraph/flamegraph.pl --width 2000 ${trace_folded} > ${svg}
+
+unlink ${out_txt}
+unlink ${trace_folded}
+open -a "Safari" ${svg}

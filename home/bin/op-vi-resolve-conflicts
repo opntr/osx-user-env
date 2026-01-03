@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+FILES=$(git status --porcelain | awk '/UU/{print $2}')
+
+nvim -p ${FILES}
+git add ${FILES}

@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+if [ "$(git branch --show-current)" != "op-master-next" ]
+then
+	echo "WTF dude?!"
+	echo "current branch should be 'op-master-next'!"
+	exit 1
+fi
+
+_upstream_commit=$1
+
+if [ -z ${_upstream_commit} ]
+then
+	echo "WTF dude!?"
+	echo "The upstream revision is empty..."
+	exit 1
+fi
+
+git stash
+
+git checkout op-master
+
+if ! git merge --ff-only ${_upstream_commit}
+then
+	echo "Failed to fast-forward merge the specific commit to op-master"
+	echo "Opening a new bash session"
+
+	bash
+fi
+
+git push
+
+
+git checkout -
+
+git stash pop

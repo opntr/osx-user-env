@@ -1,28 +1,51 @@
 #!/usr/bin/env bash
 
-set -e
+GIT_WORKSPACE=${HOME}/data/git
 
-REPO="${1}"
-GIT_BASE="${HOME}/data/git"
-
-if ! echo "${REPO}" | grep -q '@'
+if [ -z "${1}" ]
 then
-	echo "Failed: expected URL is 'ssh+git' and not '${REPO}'"
+	echo "fuck"
 	exit 1
 fi
 
-# git@github.com:joeyoravec/j2534-logger.git
-namespace=$(echo ${REPO} | sed -n -e '/git@github.com/s#.*:\(.*\)/.*#\1#gp')
-dest=$(echo ${REPO} | sed -n -e '/git@github.com/s#.*:\(.*\)/\(.*\).git#\2#gp')
-
-if [ ! -d ${GIT_BASE}/${namespace} ]
+if [ "$(git config submodule.recurse)" != "true" ]
 then
-	echo "create git namespace \"${namespace}\" for ${REPO}"
-	mkdir -p ${GIT_BASE}/${namespace}
+	git config --global submodule.recurse true
 fi
 
-cd ${GIT_BASE}/${namespace}
+URL="${1}"
 
-git clone ${REPO}
+# git@github.com:opntr-bborg/osx-user-env.git
+# ssh://anongit@git.FreeBSD.org/src.git
+META=$(echo ${URL} | sed -n \
+			-e '/anongit@/s#^.*://anongit@\(.*\)/\(.*\).git$#SERVER=\1\nNAMESPACE=freebsd\nREPO=\2#gp' \
+			-e '/git@/s#^.*://git@\(.*\)/\(.*\)/\(.*\).git$#SERVER=\1\nNAMESPACE=\2\nREPO=\3#gp' \
+			-e '/git@/s#^git@\(.*\):\(.*\)/\(.*\).git$#SERVER=\1\nNAMESPACE=\2\nREPO=\3#gp' \
+			-e 's#^.*://\(.*\)/\(.*\)/\(.*\).git$#SERVER=\1\nNAMESPACE=\2\nREPO=\3#gp' \
+	)
 
-echo "${GIT_BASE}/${namespace}/${dest}"
+eval ${META}
+printf "server: ${SERVER}\nnamespace: ${NAMESPACE}\nrepo: ${REPO}\n"
+
+if [ -z "${SERVER}" -o -z "${NAMESPACE}" -o -z "${REPO}" ]
+then
+	echo "fuck"
+	exit 2
+fi
+
+mkdir -p ${GIT_WORKSPACE}/${SERVER}/${NAMESPACE}
+
+pushd ${GIT_WORKSPACE}/${SERVER}/${NAMESPACE}
+git clone --recursive ${URL}
+pushd ${REPO}
+git lfs checkout
+popd
+popd
+
+# invalidate ws_select caches after the git clone
+for i in ${HOME}/.cache/ws_select-*.cache
+do
+	unlink ${i}
+done
+
+printf "\n\nthe new git repo will be in the following directory:\n${GIT_WORKSPACE}/${SERVER}/${NAMESPACE}/${REPO}\n"
